@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Vivi Salon — Bologna</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--purple:#c084fc;--dark:#1a1a1a;--light:#faf9f7}
+body{font-family:'Inter',sans-serif;background:var(--light);color:var(--dark)}
+h1,h2,h3,h4{font-family:'Cormorant Garamond',serif}
+#buy-banner{position:fixed;top:0;left:0;width:100%;background:#000;color:#fff;z-index:9999;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+#buy-banner p{font-size:14px}
+#buy-banner a{background:#ff4d00;color:#fff;text-decoration:none;padding:8px 18px;border-radius:4px;font-size:13px;font-weight:500;white-space:nowrap;flex-shrink:0}
+@media(max-width:600px){#buy-banner .dt{display:none}}
+@media(min-width:601px){#buy-banner .mob{display:none}}
+.hero{height:100vh;background:url('https://maps.googleapis.com/maps/api/place/photo?maxwidth=1920&photoreference=Ab43m-tNAuIzrSB6k8o49fdeTZmOsXN_3kFhQJ1SdEr83W7CtAU0FzuhVNXRK413Kjc-w5vFYOGL0cCiTzvRWqx2suQ5XG7IOHpQhFBOtrLRQxeng_ExEX1EvW6FkZidSK2P_S0mCQOYfC74jAnzAXggBMi8lWaIs0PRg0zba0w3VjaifyysyKeKNEUjMiBpyi9b_P2mIq5S8E58Jlm6k-S5NOBo8kG0JCz2znsNZ1Cep51uUjbqLd7XiBVFRykjuH0F6nBNs8tX693VyqmfB5zES7T6qiafU2lvhRtUxJG6w_0wRg&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM') center/cover no-repeat;position:relative;display:flex;align-items:center;justify-content:center;text-align:center;margin-top:44px}
+.hero::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,0.48)}
+.hero-c{position:relative;z-index:1;color:#fff;padding:0 20px}
+.hero-c h1{font-size:clamp(2.2rem,6vw,5rem);font-weight:300;letter-spacing:.04em}
+.hero-c p{font-size:1.05rem;margin-top:10px;opacity:.9}
+.hero-c .stars{margin-top:14px;font-size:1.1rem;color:#ffd700}
+.hero-c a.cta{display:inline-block;margin-top:24px;padding:13px 34px;background:var(--purple);color:#fff;text-decoration:none;border-radius:2px;font-size:.95rem;letter-spacing:.06em}
+.numeri{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-top:3px solid var(--purple)}
+@media(max-width:600px){.numeri{grid-template-columns:repeat(2,1fr)}}
+.num{padding:36px 16px;text-align:center;border-right:1px solid #eee}
+.num:last-child{border-right:none}
+.num span{display:block;font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--purple);font-weight:300}
+.num p{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#666;margin-top:5px}
+.sec{padding:72px 5% 56px}
+.sec-t{font-size:clamp(1.8rem,4vw,3rem);font-weight:300;text-align:center;margin-bottom:10px}
+.sec-s{text-align:center;color:#666;font-size:.92rem;margin-bottom:44px}
+.services{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;max-width:1100px;margin:0 auto}
+.sc{background:#fff;padding:30px;border-radius:3px;border-left:3px solid var(--purple);box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.sc h3{font-size:1.25rem;font-weight:400;margin-bottom:8px}
+.sc p{color:#666;font-size:.88rem;line-height:1.6;margin-bottom:14px}
+.sc .price{font-size:1.35rem;color:var(--purple);font-family:'Cormorant Garamond',serif}
+.about{background:#fff;padding:72px 5%}
+.about-in{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+@media(max-width:768px){.about-in{grid-template-columns:1fr}}
+.about-imgs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.about-imgs img{width:100%;height:190px;object-fit:cover;border-radius:2px}
+.about-imgs img:first-child{grid-column:1/-1;height:240px}
+.about-t h2{font-size:2.2rem;font-weight:300;margin-bottom:18px}
+.about-t p{color:#555;line-height:1.8;margin-bottom:14px}
+.gallery{display:grid;grid-template-columns:repeat(5,1fr);gap:3px}
+@media(max-width:600px){.gallery{grid-template-columns:repeat(2,1fr)}}
+.gallery img{width:100%;height:200px;object-fit:cover}
+/* RECENSIONI GOOGLE STYLE */
+.recensioni{background:var(--light);padding:72px 5%}
+.rec-inner{max-width:1100px;margin:0 auto}
+.rec-top{display:flex;align-items:flex-start;gap:40px;margin-bottom:40px;flex-wrap:wrap}
+.rec-score{min-width:160px}
+.rec-score .big-num{font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:300;line-height:1;color:var(--dark)}
+.rec-score .big-stars{font-size:1.4rem;color:#f59e0b;margin:4px 0}
+.rec-score .rec-count{font-size:.85rem;color:#666}
+.rec-score .rec-divider{width:1px;background:#ddd;height:80px;margin:0 20px;align-self:center}
+.rec-title h2{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:300;line-height:1.2}
+.rec-carousel{position:relative}
+.rec-track{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+@media(max-width:700px){.rec-track{grid-template-columns:1fr}}
+.rev-card{background:#fff;border:1px solid #e8e8e8;border-radius:8px;padding:24px;position:relative;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.rev-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.rev-meta .rev-name{font-weight:600;font-size:.95rem}
+.rev-meta .rev-when{font-size:.8rem;color:#888;margin-top:2px}
+.rev-stars{font-size:1rem;color:#f59e0b;margin-bottom:10px}
+.rev-text{font-size:.9rem;line-height:1.65;color:#444;font-style:italic}
+.rev-g{position:absolute;bottom:16px;right:16px}
+.rec-nav{display:flex;gap:10px;margin-top:24px}
+.rec-nav button{width:40px;height:40px;border-radius:50%;border:1.5px solid #ccc;background:#fff;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:border-color .2s}
+.rec-nav button:hover{border-color:var(--purple)}
+.orari{background:#fff;padding:72px 5%}
+.orari table{width:100%;max-width:560px;border-collapse:collapse;margin:28px auto 0}
+.orari td{padding:13px 0;border-bottom:1px solid #eee;font-size:.92rem}
+.orari td:last-child{text-align:right;color:var(--purple)}
+.faq{padding:72px 5%;background:var(--light)}
+.faq-in{max-width:780px;margin:0 auto}
+details{border-bottom:1px solid #e0e0e0;padding:18px 0}
+details summary{font-size:1rem;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+details summary::after{content:'+';font-size:1.3rem;color:var(--purple)}
+details[open] summary::after{content:'−'}
+details p{color:#555;line-height:1.7;margin-top:12px;font-size:.92rem}
+#map{height:380px;width:100%}
+.contatti{background:#1a1a1a;color:#fff;padding:56px 5%;text-align:center}
+.contatti h2{font-size:1.9rem;font-weight:300;margin-bottom:8px}
+.contatti p{color:#aaa;margin-bottom:5px}
+.contatti a{color:var(--purple);text-decoration:none}
+footer{background:#111;color:#666;text-align:center;padding:22px;font-size:.78rem}
+footer a{color:#888;cursor:pointer}
+.wa{position:fixed;bottom:22px;right:22px;background:#25D366;color:#fff;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:24px;box-shadow:0 4px 16px rgba(37,211,102,.4);z-index:8888}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99999;align-items:center;justify-content:center}
+.modal.open{display:flex}
+.modal-box{background:#fff;padding:36px;max-width:580px;width:90%;max-height:80vh;overflow-y:auto;border-radius:3px}
+.modal-box h3{margin-bottom:14px;font-size:1.5rem;font-weight:300}
+.modal-box p{color:#555;line-height:1.7;font-size:.88rem;margin-bottom:8px}
+.modal-close{float:right;background:none;border:1px solid #ccc;padding:5px 12px;cursor:pointer;border-radius:2px}
+</style>
+</head>
+<body>
+<div id="buy-banner">
+  <p class="dt">Ti piace questo sito? Il tuo potrebbe essere identico — online in 5 giorni per €99</p>
+  <p class="mob">Vuoi un sito così? €99</p>
+  <a href="https://buy.stripe.com/8x25kC7mo39M0bN1Mv1B601" target="_blank">Inizia ora →</a>
+</div>
+<section class="hero">
+  <div class="hero-c">
+    <h1>Vivi Salon</h1>
+    <p>Via Pietro Faccini,  1 · Bologna</p>
+    <div class="stars">★★★★ 4.1 · 497 recensioni Google</div>
+    <a href="https://wa.me/390516313291" class="cta" target="_blank">Prenota su WhatsApp</a>
+  </div>
+</section>
+<div class="numeri">
+  <div class="num"><span>4.1</span><p>Rating Google</p></div>
+  <div class="num"><span>497</span><p>Recensioni</p></div>
+  <div class="num"><span>15+</span><p>Anni esperienza</p></div>
+  <div class="num"><span>Bologna</span><p>Città</p></div>
+</div>
+<section class="sec" style="background:var(--light)">
+  <h2 class="sec-t">I Nostri Servizi</h2>
+  <p class="sec-s">Trattamenti professionali per ogni esigenza</p>
+  <div class="services">
+    <div class="sc"><h3>Taglio Donna</h3><p>Taglio su misura con consulenza personalizzata.</p><div class="price">da €35</div></div>
+    <div class="sc"><h3>Colore & Meches</h3><p>Colorazioni professionali con prodotti di alta qualità.</p><div class="price">da €55</div></div>
+    <div class="sc"><h3>Piega & Styling</h3><p>Piega professionale per ogni occasione.</p><div class="price">da €20</div></div>
+    <div class="sc"><h3>Trattamenti Capelli</h3><p>Maschere nutrienti, cheratina e ricostruzione.</p><div class="price">da €30</div></div>
+    <div class="sc"><h3>Taglio Uomo</h3><p>Taglio classico o moderno con finiture impeccabili.</p><div class="price">da €20</div></div>
+    <div class="sc"><h3>Acconciature Sposa</h3><p>Acconciature per matrimoni ed eventi speciali.</p><div class="price">da €80</div></div>
+  </div>
+</section>
+<section class="about">
+  <div class="about-in">
+    <div class="about-imgs">
+      <img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photoreference=Ab43m-tNAuIzrSB6k8o49fdeTZmOsXN_3kFhQJ1SdEr83W7CtAU0FzuhVNXRK413Kjc-w5vFYOGL0cCiTzvRWqx2suQ5XG7IOHpQhFBOtrLRQxeng_ExEX1EvW6FkZidSK2P_S0mCQOYfC74jAnzAXggBMi8lWaIs0PRg0zba0w3VjaifyysyKeKNEUjMiBpyi9b_P2mIq5S8E58Jlm6k-S5NOBo8kG0JCz2znsNZ1Cep51uUjbqLd7XiBVFRykjuH0F6nBNs8tX693VyqmfB5zES7T6qiafU2lvhRtUxJG6w_0wRg&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="Salone" loading="lazy">
+      <img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photoreference=Ab43m-tqaT_5xwqHtKBCMTbMk5WF49uLstUmfMWDSXjKKP_9sojetb44yRc4lRGNMn_yUq9Gv6xiF2jxgbG_LBKM_yCM3fGnHaegenyGcDzB1nYjIn7PbKyPMwsNTwLHeMJciAAcwgumqrb_xoyFDmZ1ojyKTVqIoz1oxNGrqPT0kePIAE8Q_9l0HOBt51_1BXgQXLEI4ImO38cxESOJHy3BOX8AkHzHeM6DvW96PEiFpLSgxkeK-myPXavuFsEKzfuWq_ygYAyw0SDpSrzyLyuqwdItOF9y4OS4DgxGiwJHS99WkS4ltpbJpciQKFBDvIWnegyiRN9WVWjTMDOjFo8tpNXwlj-APALAW_59lx_4v3ZDJIqSbo4LKrEdH_5WBcrMef6JaZe5U5hlDYFqPSPzjRGM8tk4oV1uMj7SUGEL7xo3qg&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="Team" loading="lazy">
+      <img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photoreference=Ab43m-tAmB5FjdyavVfBHSU8Im-jQP9HhmbMd6q1X-_VeMyB37Ucpz6ZjMc_f2OEbzYwWI9XtiU-BzyVHUxSHizKPsQWoLj5lRcr5rrhyIRhhmgt8dL1wkbhuDYZgX76tkl8gbJtdUUEWzYeR_q8QoRR322K5SvfiWuRvFI5OCWDbz-0ejE_0xcDvR6i7-RH2c6CIuMCJy3su6MEUY7uhMcwCXYKAeiG2IG-HxtX4vJommCNVsC8wwDGPcnFbKHCKti0SGfwrNFiE3XeBLfEiqPXeKNFXwh0cczQHRM8FngFEz8KUJ1Krh_MPFndp7yM9rkeUG_O8uPNcHuPsmQcTfzAu0un9zzyDIMj-yMMYK2Ap7qHM609Pmh_UGWvP9KrDyMUci9YiN-uOCO4KTVn69TS5v-2KWD4MEjSZlNGFhjSEX_ORy9zmF7mki-pZm8Zfw&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="Lavoro" loading="lazy">
+    </div>
+    <div class="about-t">
+      <h2>Chi Siamo</h2>
+      <p>Siamo un salone con oltre 15 anni di esperienza nel cuore di Bologna. La nostra passione per i capelli si riflette in ogni servizio.</p>
+      <p>Il nostro team si aggiorna costantemente sulle ultime tendenze per offrirti sempre il meglio.</p>
+      <p>Utilizziamo solo prodotti di qualità professionale, rispettosi dei capelli e dell'ambiente.</p>
+    </div>
+  </div>
+</section>
+<div class="gallery"><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=Ab43m-tqaT_5xwqHtKBCMTbMk5WF49uLstUmfMWDSXjKKP_9sojetb44yRc4lRGNMn_yUq9Gv6xiF2jxgbG_LBKM_yCM3fGnHaegenyGcDzB1nYjIn7PbKyPMwsNTwLHeMJciAAcwgumqrb_xoyFDmZ1ojyKTVqIoz1oxNGrqPT0kePIAE8Q_9l0HOBt51_1BXgQXLEI4ImO38cxESOJHy3BOX8AkHzHeM6DvW96PEiFpLSgxkeK-myPXavuFsEKzfuWq_ygYAyw0SDpSrzyLyuqwdItOF9y4OS4DgxGiwJHS99WkS4ltpbJpciQKFBDvIWnegyiRN9WVWjTMDOjFo8tpNXwlj-APALAW_59lx_4v3ZDJIqSbo4LKrEdH_5WBcrMef6JaZe5U5hlDYFqPSPzjRGM8tk4oV1uMj7SUGEL7xo3qg&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="" loading="lazy"><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=Ab43m-tAmB5FjdyavVfBHSU8Im-jQP9HhmbMd6q1X-_VeMyB37Ucpz6ZjMc_f2OEbzYwWI9XtiU-BzyVHUxSHizKPsQWoLj5lRcr5rrhyIRhhmgt8dL1wkbhuDYZgX76tkl8gbJtdUUEWzYeR_q8QoRR322K5SvfiWuRvFI5OCWDbz-0ejE_0xcDvR6i7-RH2c6CIuMCJy3su6MEUY7uhMcwCXYKAeiG2IG-HxtX4vJommCNVsC8wwDGPcnFbKHCKti0SGfwrNFiE3XeBLfEiqPXeKNFXwh0cczQHRM8FngFEz8KUJ1Krh_MPFndp7yM9rkeUG_O8uPNcHuPsmQcTfzAu0un9zzyDIMj-yMMYK2Ap7qHM609Pmh_UGWvP9KrDyMUci9YiN-uOCO4KTVn69TS5v-2KWD4MEjSZlNGFhjSEX_ORy9zmF7mki-pZm8Zfw&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="" loading="lazy"><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=Ab43m-stBdU6QqtdVOln_S_FwnY5hb6k0BV5wMjdTKxLzsSW5lTfwusZjX-DqCrZolGpAThVaylU7Z3EN9IVShrJJTXGBmYvkGsLzcc0_Nvt1UNgqzO7VuBsCMBsTbi05KciU7nHxs-lnkVVAVYOKNe1qMFX08dXNS_TH7sy6Mn6Fo5kTtZUsr2D6xPeu_2EOFqPaceGRKVmy3S_GdQ0iDbzDx6Xpig6wxV2ksNmbv5m6ndBI3RnfzO9aWyVR7i0_M-rK-JcTA6BQJjQ8qT3SvcST1iA34KetK-w6Y7VcKHA6KGEU3_Isl6Tnx2wlnRSNbm313l0r-MGD58vJS1JtLcHci4_XTpShOz81QNaASuibbtgO_2uRy98ABGpMtvUbazMBtW250LkrYYaFA17zlOWftBaQZOnwiUvKO0fBsbzFC8oA_1ZY-YtHhY47KSX5g&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="" loading="lazy"><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=Ab43m-vicw-0G8S5i49IBkbqJj19Rsl9Vu9BMQVuMeHwyzXxGApMtWjHF5MsqwIDCIKRO2-zHi7QD_ypkdmnzRppvVGEACL-oL4L5BYTvWJjpLyXFY9G0HGOEdErAZKvhyVStzGtPNtjzGMuXaT0rvMzJXak0lWDOeZPdaI27__AObT54oMA5ouAujzRtIrNr8SX6U-VRP6zK3VyZkwxHDaAIibWAxMr0jnchfnfhmdiBMa66x5kHRzbhU47kQKzphqATzSXkHM2BiMadB25AyuzTXEmeu3GFQpBXR5HtvKBfaqGxOWOFM6msS1otPNTdpzRN0KCIxM7aWLH-ScOLeXXzJ0Kj1lktdAr6poVTx61okM_R3QGV7UP0_4Mj6j54pvtAuzsvWjEoUD6qtTx6aDCQBpbQGhWYhAExD4l6uHykoxBGgUn&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="" loading="lazy"><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=Ab43m-vSmL4QNMX5i5hEAxeFEGKNSeuPXElc2fG5hNJRp51jalh9ogBHniP_GwkCcPSWHoXIFq9_K3D4GzN6kPY4UulsKGI_JjAnrgN-6ux6N3LO9wA_Nu_Z72NY_UWXragPwp8HSt9hO_jLsvoY6Do_Bd3hRObVXmC0xuEdtZBb7Tm4qG_7T-V_iyX6PFEXg_m0fsp-Rvap3aCTxi7F7ZA8NI_mVQk3An5n-i1N1IEMkxN0uNoqT5I0xuf_j1sa19SoH_YNOHNqAdUQfEPFhwGe1eDff2kPXp1pHIg7dlvrlWdxxZUB_7K3urEYUnRX1QlbjrTTH-9KLhDipPjS6_P3O6zQSVztmvPb0v7Ms4MTELKS2zdCBB4fyV0-X9NCLozAfnIGtFp3mW3tqEkNru5JBrVYd9KApk-6N22ynNHzaPZlOCxr&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="" loading="lazy"></div>
+
+<!-- RECENSIONI GOOGLE STYLE -->
+<section class="recensioni">
+  <div class="rec-inner">
+    <div class="rec-top">
+      <div class="rec-score">
+        <div class="big-num">4.1</div>
+        <div class="big-stars">★★★★☆</div>
+        <div class="rec-count">497 recensioni Google</div>
+      </div>
+      <div class="rec-score rec-divider"></div>
+      <div class="rec-title"><h2>Cosa dicono<br>i nostri clienti</h2></div>
+    </div>
+    <div class="rec-carousel">
+      <div class="rec-track" id="rec-track">
+        <div class="rev-card">
+  <div class="rev-header">
+    <img src="https://lh3.googleusercontent.com/a-/ALV-UjXl5kS2zRhy7a_L2xZe7oRaltsvKCxP1wn96ttF48ZmmGDHaIBU=s128-c0x00000000-cc-rp-mo" alt="SR" style="width:44px;height:44px;border-radius:50%;object-fit:cover">
+    <div class="rev-meta"><div class="rev-name">Stella Rossi</div><div class="rev-when">6 mesi fa</div></div>
+  </div>
+  <div class="rev-stars">★☆☆☆☆</div>
+  <p class="rev-text">"Per quanto mi dispiaccia fare una brutta recensione, non posso negare che la mia esperienza è stata assolutamente negativa e i risultati sono un danno che richiederà mesi per ripararlo.
+
+Ho contattato la struttura in anticipo specificando di avere i capelli ricci e chiedendo un taglio per aumentare "</p>
+  <div class="rev-g"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg></div>
+</div><div class="rev-card">
+  <div class="rev-header">
+    <img src="https://lh3.googleusercontent.com/a-/ALV-UjULghZ5fqyPuMScIbs9S1IqnxI5l3_LlOX1fPsiJTuOe_gmK78U=s128-c0x00000000-cc-rp-mo" alt="SG" style="width:44px;height:44px;border-radius:50%;object-fit:cover">
+    <div class="rev-meta"><div class="rev-name">Sofia Giorgi Visani</div><div class="rev-when">10 mesi fa</div></div>
+  </div>
+  <div class="rev-stars">★★★★☆</div>
+  <p class="rev-text">"Unghie wow 😍
+Sono ormai 6 mesi che vado da loro per rifare le unghie e non mi si sono mai spezzate nonostante il mio lavoro ! Prezzi onesti e sempre disponibili per prenotazioni all’ultimo minuto !
+La ragazza che mi ha seguito questa volta, Sara, è molto attenta ai dettagli, la struttura è quasi per"</p>
+  <div class="rev-g"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg></div>
+</div><div class="rev-card">
+  <div class="rev-header">
+    <img src="https://lh3.googleusercontent.com/a-/ALV-UjXKzcADP3Wm6cApqJAwtHsEYHTAWD-tMH36BhKxJE9c62ZCLuns=s128-c0x00000000-cc-rp-mo" alt="MB" style="width:44px;height:44px;border-radius:50%;object-fit:cover">
+    <div class="rev-meta"><div class="rev-name">Mauro Bacci</div><div class="rev-when">10 mesi fa</div></div>
+  </div>
+  <div class="rev-stars">★★★★★</div>
+  <p class="rev-text">"Esperienza fantastica! Sono andato per fare i raggi di sole bianchi e il risultato è stato semplicemente perfetto: luminosi, naturali e ben distribuiti. Il personale è stato gentilissimo e molto professionale, si vede che ci tengono davvero alla soddisfazione del cliente. E come ciliegina sulla tort"</p>
+  <div class="rev-g"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg></div>
+</div><div class="rev-card">
+  <div class="rev-header">
+    <img src="https://lh3.googleusercontent.com/a/ACg8ocI8jj-AceJoOrdu0_SdeyjcDkujS5bpcDvSyacL2col1Hpkmw=s128-c0x00000000-cc-rp-mo-ba3" alt="MM" style="width:44px;height:44px;border-radius:50%;object-fit:cover">
+    <div class="rev-meta"><div class="rev-name">Michael Mucci</div><div class="rev-when">3 mesi fa</div></div>
+  </div>
+  <div class="rev-stars">★★★☆☆</div>
+  <p class="rev-text">"Pro: sono ben organizzati, doppio lavaggio di capelli, non c’è molto da aspettare.
+
+Contro: Locale non sempre pulitissimo, taglio uomo semplice, non esco mai convintissimo ma sono vicini e ci torno comunque.
+
+Prezzo nella media"</p>
+  <div class="rev-g"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg></div>
+</div><div class="rev-card">
+  <div class="rev-header">
+    <img src="https://lh3.googleusercontent.com/a/ACg8ocJG1vGRz9JTOM1koiuZO4y2o34csF8QF01hJh-9gi5Nq9a2WA=s128-c0x00000000-cc-rp-mo-ba3" alt="PS" style="width:44px;height:44px;border-radius:50%;object-fit:cover">
+    <div class="rev-meta"><div class="rev-name">Peggy Sue</div><div class="rev-when">6 mesi fa</div></div>
+  </div>
+  <div class="rev-stars">★☆☆☆☆</div>
+  <p class="rev-text">"Tentai di entrare nel salone qualche anno fa, ma ebbi subito un'accoglienza sgarbata. Personale nullafacente seduto a battibeccare tra loro, operatrice alla reception intenta a fumare e a farsi i fatti suoi, persona che ha risposto alla mia richiests sul costo di una messa in piega.. spara €. 26,00 "</p>
+  <div class="rev-g"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg></div>
+</div>
+      </div>
+      <div class="rec-nav">
+        <button onclick="slide(-1)" aria-label="Precedente">←</button>
+        <button onclick="slide(1)" aria-label="Successivo">→</button>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+var allCards=document.querySelectorAll('.rev-card'),idx=0,perPage=window.innerWidth<700?1:2;
+function show(){allCards.forEach(function(c,i){c.style.display=(i>=idx&&i<idx+perPage)?'block':'none'})}
+function slide(d){idx=Math.max(0,Math.min(idx+d,allCards.length-perPage));show()}
+show();
+window.addEventListener('resize',function(){perPage=window.innerWidth<700?1:2;show()});
+</script>
+
+<section class="orari">
+  <h2 class="sec-t">Orari di Apertura</h2>
+  <table>
+    <tr><td>Lunedì</td><td>Chiuso</td></tr>
+    <tr><td>Martedì</td><td>09:00 – 18:30</td></tr>
+    <tr><td>Mercoledì</td><td>09:00 – 18:30</td></tr>
+    <tr><td>Giovedì</td><td>09:00 – 18:30</td></tr>
+    <tr><td>Venerdì</td><td>09:00 – 19:00</td></tr>
+    <tr><td>Sabato</td><td>08:30 – 17:00</td></tr>
+    <tr><td>Domenica</td><td>Chiuso</td></tr>
+  </table>
+</section>
+<section class="faq">
+  <div class="faq-in">
+    <h2 class="sec-t">Domande Frequenti</h2>
+    <details><summary>Devo prenotare in anticipo?</summary><p>Consigliamo sempre di prenotare per garantire la disponibilità. Accettiamo anche clienti senza appuntamento quando possibile.</p></details>
+    <details><summary>Quanto dura un trattamento colore?</summary><p>Un colore completo richiede in media 2-3 ore. Per meches o balayage, prevedere 3-4 ore.</p></details>
+    <details><summary>Usate prodotti senza ammoniaca?</summary><p>Sì, offriamo colorazioni tradizionali e alternative senza ammoniaca per capelli sensibili.</p></details>
+    <details><summary>Fate acconciature per matrimoni?</summary><p>Assolutamente sì! Servizio completo per sposa con prova acconciatura inclusa.</p></details>
+    <details><summary>Quali metodi di pagamento accettate?</summary><p>Contanti, carte di credito/debito e pagamenti digitali (Apple Pay, Google Pay).</p></details>
+  </div>
+</section>
+<div id="map"></div>
+<script>
+var map=L.map('map').setView([44.5145559,11.3527478],15);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
+L.marker([44.5145559,11.3527478]).addTo(map).bindPopup('<b>Vivi Salon</b><br>Via Pietro Faccini,  1').openPopup();
+</script>
+<section class="contatti">
+  <h2>Contattaci</h2>
+  <p style="margin-top:14px">Via Pietro Faccini,  1, 40128 Bologna</p>
+  <p><a href="tel:+39 051 631 3291">+39 051 631 3291</a></p>
+  <p style="margin-top:18px"><a href="https://wa.me/390516313291" target="_blank" style="background:var(--purple);color:#fff;padding:11px 26px;border-radius:2px;text-decoration:none;display:inline-block">Scrivici su WhatsApp</a></p>
+</section>
+<footer>
+  <p>© 2025 Vivi Salon · Via Pietro Faccini,  1, 40128 Bologna · <a onclick="document.getElementById('pm').classList.add('open')">Privacy Policy</a></p>
+</footer>
+<div id="pm" class="modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('pm').classList.remove('open')">Chiudi</button>
+    <h3>Privacy Policy</h3>
+    <p>Questo sito non raccoglie dati personali, non usa cookie di profilazione e non effettua tracking.</p>
+    <p>Titolare: Vivi Salon, Via Pietro Faccini,  1, 40128 Bologna. Contatto: <a href="tel:+39 051 631 3291">+39 051 631 3291</a>.</p>
+    <p>Ultimo aggiornamento: maggio 2025.</p>
+  </div>
+</div>
+<a href="https://wa.me/390516313291" class="wa" target="_blank">&#x1F4AC;</a>
+</body></html>

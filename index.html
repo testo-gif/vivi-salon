@@ -9,15 +9,15 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--purple:#c084fc;--dark:#1a1a1a;--light:#faf9f7}
+:root{--purple:#c084fc;--dark:#1a1a1a;--light:#faf9f7;--call-green:#1a5c2a;--wa-green:#25D366}
 body{font-family:'Inter',sans-serif;background:var(--light);color:var(--dark)}
 h1,h2,h3,h4{font-family:'Cormorant Garamond',serif}
 #buy-banner{position:fixed;top:0;left:0;width:100%;background:#000;color:#fff;z-index:9999;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 #buy-banner p{font-size:14px}
-#buy-banner a{background:#ff4d00;color:#fff;text-decoration:none;padding:8px 18px;border-radius:4px;font-size:13px;font-weight:500;white-space:nowrap;flex-shrink:0}
+#buy-banner a.stripe{background:#ff4d00;color:#fff;text-decoration:none;padding:8px 18px;border-radius:4px;font-size:13px;font-weight:500;white-space:nowrap;flex-shrink:0}
 @media(max-width:600px){#buy-banner .dt{display:none}}
 @media(min-width:601px){#buy-banner .mob{display:none}}
-.hero{height:100vh;background:url('https://maps.googleapis.com/maps/api/place/photo?maxwidth=1920&photoreference=Ab43m-tNAuIzrSB6k8o49fdeTZmOsXN_3kFhQJ1SdEr83W7CtAU0FzuhVNXRK413Kjc-w5vFYOGL0cCiTzvRWqx2suQ5XG7IOHpQhFBOtrLRQxeng_ExEX1EvW6FkZidSK2P_S0mCQOYfC74jAnzAXggBMi8lWaIs0PRg0zba0w3VjaifyysyKeKNEUjMiBpyi9b_P2mIq5S8E58Jlm6k-S5NOBo8kG0JCz2znsNZ1Cep51uUjbqLd7XiBVFRykjuH0F6nBNs8tX693VyqmfB5zES7T6qiafU2lvhRtUxJG6w_0wRg&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM') center/cover no-repeat;position:relative;display:flex;align-items:center;justify-content:center;text-align:center;margin-top:44px}
+.hero{height:100vh;background:url('https://maps.googleapis.com/maps/api/place/photo?maxwidth=1920&photoreference=Ab43m-tR6TjtjdSR6aZ62a26nfidhxp43_hkmQRzWm5Qj6v0f4mvpA9hElyfDTsfV1IYDfjzdIVSplpVX5fIeOK5hyfCUzzue-kO7sZ0mRIC3UxkRtpEUmJ5BuU01duDmNqmFD4DyZbE7z6vX8qFPJTKQ46uyFBgjqOLTKFFLSdcjcmzQMYvHn0lnVgQRLOJSqJAbUbVcJ4YE_IErKqh72KnQkiAzOpX8L8k9KXz766_zrrCO2HFt5B5joAJ4RT2wXVSa9WKdDjFIoObZXgHajO3BMgyVTEKE3qzrgDYn-TxgTBr6w&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM') center/cover no-repeat;position:relative;display:flex;align-items:center;justify-content:center;text-align:center;margin-top:44px}
 .hero::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,0.48)}
 .hero-c{position:relative;z-index:1;color:#fff;padding:0 20px}
 .hero-c h1{font-size:clamp(2.2rem,6vw,5rem);font-weight:300;letter-spacing:.04em}
@@ -49,17 +49,14 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif}
 .gallery{display:grid;grid-template-columns:repeat(5,1fr);gap:3px}
 @media(max-width:600px){.gallery{grid-template-columns:repeat(2,1fr)}}
 .gallery img{width:100%;height:200px;object-fit:cover}
-/* RECENSIONI GOOGLE STYLE */
 .recensioni{background:var(--light);padding:72px 5%}
 .rec-inner{max-width:1100px;margin:0 auto}
 .rec-top{display:flex;align-items:flex-start;gap:40px;margin-bottom:40px;flex-wrap:wrap}
-.rec-score{min-width:160px}
 .rec-score .big-num{font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:300;line-height:1;color:var(--dark)}
 .rec-score .big-stars{font-size:1.4rem;color:#f59e0b;margin:4px 0}
 .rec-score .rec-count{font-size:.85rem;color:#666}
-.rec-score .rec-divider{width:1px;background:#ddd;height:80px;margin:0 20px;align-self:center}
+.rec-divider{width:1px;background:#ddd;height:80px;margin:0 20px;align-self:center}
 .rec-title h2{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:300;line-height:1.2}
-.rec-carousel{position:relative}
 .rec-track{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
 @media(max-width:700px){.rec-track{grid-template-columns:1fr}}
 .rev-card{background:#fff;border:1px solid #e8e8e8;border-radius:8px;padding:24px;position:relative;box-shadow:0 1px 6px rgba(0,0,0,.06)}
@@ -90,7 +87,12 @@ details p{color:#555;line-height:1.7;margin-top:12px;font-size:.92rem}
 .contatti a{color:var(--purple);text-decoration:none}
 footer{background:#111;color:#666;text-align:center;padding:22px;font-size:.78rem}
 footer a{color:#888;cursor:pointer}
-.wa{position:fixed;bottom:22px;right:22px;background:#25D366;color:#fff;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:24px;box-shadow:0 4px 16px rgba(37,211,102,.4);z-index:8888}
+/* STICKY BUTTONS */
+.sticky-btn{position:fixed;bottom:22px;right:22px;width:auto;min-width:54px;height:54px;border-radius:28px;display:flex;align-items:center;gap:8px;padding:0 18px 0 14px;text-decoration:none;font-size:14px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.25);z-index:8888;color:#fff;transition:transform .2s}
+.sticky-btn:hover{transform:scale(1.05)}
+.sticky-btn span{white-space:nowrap}
+.sticky-call{background:var(--call-green)}
+.sticky-wa{background:var(--wa-green)}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99999;align-items:center;justify-content:center}
 .modal.open{display:flex}
 .modal-box{background:#fff;padding:36px;max-width:580px;width:90%;max-height:80vh;overflow-y:auto;border-radius:3px}
@@ -103,14 +105,14 @@ footer a{color:#888;cursor:pointer}
 <div id="buy-banner">
   <p class="dt">Ti piace questo sito? Il tuo potrebbe essere identico — online in 5 giorni per €99</p>
   <p class="mob">Vuoi un sito così? €99</p>
-  <a href="https://buy.stripe.com/8x25kC7mo39M0bN1Mv1B601" target="_blank">Inizia ora →</a>
+  <a href="https://buy.stripe.com/8x25kC7mo39M0bN1Mv1B601" target="_blank" class="stripe">Inizia ora →</a>
 </div>
 <section class="hero">
   <div class="hero-c">
     <h1>Vivi Salon</h1>
-    <p>Via Pietro Faccini,  1 · Bologna</p>
+    <p>Via Pietro Faccini, 1 · Bologna</p>
     <div class="stars">★★★★ 4.1 · 497 recensioni Google</div>
-    <a href="https://wa.me/390516313291" class="cta" target="_blank">Prenota su WhatsApp</a>
+    <a href="tel:+39 051 631 3291" class="cta">📞 Chiama ora</a>
   </div>
 </section>
 <div class="numeri">
@@ -134,9 +136,9 @@ footer a{color:#888;cursor:pointer}
 <section class="about">
   <div class="about-in">
     <div class="about-imgs">
-      <img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photoreference=Ab43m-tNAuIzrSB6k8o49fdeTZmOsXN_3kFhQJ1SdEr83W7CtAU0FzuhVNXRK413Kjc-w5vFYOGL0cCiTzvRWqx2suQ5XG7IOHpQhFBOtrLRQxeng_ExEX1EvW6FkZidSK2P_S0mCQOYfC74jAnzAXggBMi8lWaIs0PRg0zba0w3VjaifyysyKeKNEUjMiBpyi9b_P2mIq5S8E58Jlm6k-S5NOBo8kG0JCz2znsNZ1Cep51uUjbqLd7XiBVFRykjuH0F6nBNs8tX693VyqmfB5zES7T6qiafU2lvhRtUxJG6w_0wRg&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="Salone" loading="lazy">
-      <img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photoreference=Ab43m-tqaT_5xwqHtKBCMTbMk5WF49uLstUmfMWDSXjKKP_9sojetb44yRc4lRGNMn_yUq9Gv6xiF2jxgbG_LBKM_yCM3fGnHaegenyGcDzB1nYjIn7PbKyPMwsNTwLHeMJciAAcwgumqrb_xoyFDmZ1ojyKTVqIoz1oxNGrqPT0kePIAE8Q_9l0HOBt51_1BXgQXLEI4ImO38cxESOJHy3BOX8AkHzHeM6DvW96PEiFpLSgxkeK-myPXavuFsEKzfuWq_ygYAyw0SDpSrzyLyuqwdItOF9y4OS4DgxGiwJHS99WkS4ltpbJpciQKFBDvIWnegyiRN9WVWjTMDOjFo8tpNXwlj-APALAW_59lx_4v3ZDJIqSbo4LKrEdH_5WBcrMef6JaZe5U5hlDYFqPSPzjRGM8tk4oV1uMj7SUGEL7xo3qg&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="Team" loading="lazy">
-      <img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photoreference=Ab43m-tAmB5FjdyavVfBHSU8Im-jQP9HhmbMd6q1X-_VeMyB37Ucpz6ZjMc_f2OEbzYwWI9XtiU-BzyVHUxSHizKPsQWoLj5lRcr5rrhyIRhhmgt8dL1wkbhuDYZgX76tkl8gbJtdUUEWzYeR_q8QoRR322K5SvfiWuRvFI5OCWDbz-0ejE_0xcDvR6i7-RH2c6CIuMCJy3su6MEUY7uhMcwCXYKAeiG2IG-HxtX4vJommCNVsC8wwDGPcnFbKHCKti0SGfwrNFiE3XeBLfEiqPXeKNFXwh0cczQHRM8FngFEz8KUJ1Krh_MPFndp7yM9rkeUG_O8uPNcHuPsmQcTfzAu0un9zzyDIMj-yMMYK2Ap7qHM609Pmh_UGWvP9KrDyMUci9YiN-uOCO4KTVn69TS5v-2KWD4MEjSZlNGFhjSEX_ORy9zmF7mki-pZm8Zfw&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="Lavoro" loading="lazy">
+      <img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photoreference=Ab43m-tR6TjtjdSR6aZ62a26nfidhxp43_hkmQRzWm5Qj6v0f4mvpA9hElyfDTsfV1IYDfjzdIVSplpVX5fIeOK5hyfCUzzue-kO7sZ0mRIC3UxkRtpEUmJ5BuU01duDmNqmFD4DyZbE7z6vX8qFPJTKQ46uyFBgjqOLTKFFLSdcjcmzQMYvHn0lnVgQRLOJSqJAbUbVcJ4YE_IErKqh72KnQkiAzOpX8L8k9KXz766_zrrCO2HFt5B5joAJ4RT2wXVSa9WKdDjFIoObZXgHajO3BMgyVTEKE3qzrgDYn-TxgTBr6w&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="Salone" loading="lazy">
+      <img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photoreference=Ab43m-vzjefsySJqv7l45TXx1up-8j5W2blrrCB36bBj1MC6hztlf-_mBygwAFP6PHwUUu8Yuh_ljVYbLCYC7tL2KU3nF_ZWjPCX-r4Kl5tAAPzvZiZdO_djfK-fV47P2jVfkiahUt4gwSxq8H4BF3vmlzJHnyjaelQDxoHHLTL8QFJMTakvt6_qkijkR-CSsMOcajb1z4lEQG2J6Pj9k_gBQmeYvBfjyGjQbbD52tKf7azOEHw3EiwJc8tOa3Vw89Hl061xPQCAspHS407VsxjuOUd1T1ZtVlrcKFfKc9GoetUxDq91jqsVFw4qCw4sV5PoQLUbBV1eejWTrUtEnvRkAvJ19cvgEnTcgDDA_AXiWDSFC1k2GK16ISXwH6kB_vLogZ9OSAibmvFI1ufYh1FaEDM7J332xcXgnRj3dniCeuqTcA&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="Team" loading="lazy">
+      <img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photoreference=Ab43m-tUhTpEuoE9sb0mYkdV5m07VcpYp7YnCNrT579wiUevW6A8rSajayIThKltIEzjXZNVNngUAX89mLX3BJacS6rDfIQk4lXPCJhm-Mh-FNKYXPfU-fJ6dFgSk4fX8IhcdLktPlCxt9PrtU8Y-8mhV7tXPLgzLePIobKZU1qV67sMWCTrfH_0IOJUHvLCC8uAkL8SltREqycmklQPpWj8WHsgIdzRMh63uEgqo2njx6u43wPTiRHVsJFqVO3D9k3eZeKXjhlEaMQL2hObxacVTPUTZ-oZz3z8QIIJEKhlIkgt7KvJuTCyoA2uLh0bI9pnBF-ICxMalq33iN1kgB7H8t08LSDzVdbOe46zPlbvgbMODvEX4smBYXqCpJILQ0NPC5vznLm7fueraJKuoDXSEvyZoGwBUaMaRdI5sHilOlY26maMfrCpG8phBaFXbA&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="Lavoro" loading="lazy">
     </div>
     <div class="about-t">
       <h2>Chi Siamo</h2>
@@ -146,9 +148,7 @@ footer a{color:#888;cursor:pointer}
     </div>
   </div>
 </section>
-<div class="gallery"><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=Ab43m-tqaT_5xwqHtKBCMTbMk5WF49uLstUmfMWDSXjKKP_9sojetb44yRc4lRGNMn_yUq9Gv6xiF2jxgbG_LBKM_yCM3fGnHaegenyGcDzB1nYjIn7PbKyPMwsNTwLHeMJciAAcwgumqrb_xoyFDmZ1ojyKTVqIoz1oxNGrqPT0kePIAE8Q_9l0HOBt51_1BXgQXLEI4ImO38cxESOJHy3BOX8AkHzHeM6DvW96PEiFpLSgxkeK-myPXavuFsEKzfuWq_ygYAyw0SDpSrzyLyuqwdItOF9y4OS4DgxGiwJHS99WkS4ltpbJpciQKFBDvIWnegyiRN9WVWjTMDOjFo8tpNXwlj-APALAW_59lx_4v3ZDJIqSbo4LKrEdH_5WBcrMef6JaZe5U5hlDYFqPSPzjRGM8tk4oV1uMj7SUGEL7xo3qg&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="" loading="lazy"><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=Ab43m-tAmB5FjdyavVfBHSU8Im-jQP9HhmbMd6q1X-_VeMyB37Ucpz6ZjMc_f2OEbzYwWI9XtiU-BzyVHUxSHizKPsQWoLj5lRcr5rrhyIRhhmgt8dL1wkbhuDYZgX76tkl8gbJtdUUEWzYeR_q8QoRR322K5SvfiWuRvFI5OCWDbz-0ejE_0xcDvR6i7-RH2c6CIuMCJy3su6MEUY7uhMcwCXYKAeiG2IG-HxtX4vJommCNVsC8wwDGPcnFbKHCKti0SGfwrNFiE3XeBLfEiqPXeKNFXwh0cczQHRM8FngFEz8KUJ1Krh_MPFndp7yM9rkeUG_O8uPNcHuPsmQcTfzAu0un9zzyDIMj-yMMYK2Ap7qHM609Pmh_UGWvP9KrDyMUci9YiN-uOCO4KTVn69TS5v-2KWD4MEjSZlNGFhjSEX_ORy9zmF7mki-pZm8Zfw&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="" loading="lazy"><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=Ab43m-stBdU6QqtdVOln_S_FwnY5hb6k0BV5wMjdTKxLzsSW5lTfwusZjX-DqCrZolGpAThVaylU7Z3EN9IVShrJJTXGBmYvkGsLzcc0_Nvt1UNgqzO7VuBsCMBsTbi05KciU7nHxs-lnkVVAVYOKNe1qMFX08dXNS_TH7sy6Mn6Fo5kTtZUsr2D6xPeu_2EOFqPaceGRKVmy3S_GdQ0iDbzDx6Xpig6wxV2ksNmbv5m6ndBI3RnfzO9aWyVR7i0_M-rK-JcTA6BQJjQ8qT3SvcST1iA34KetK-w6Y7VcKHA6KGEU3_Isl6Tnx2wlnRSNbm313l0r-MGD58vJS1JtLcHci4_XTpShOz81QNaASuibbtgO_2uRy98ABGpMtvUbazMBtW250LkrYYaFA17zlOWftBaQZOnwiUvKO0fBsbzFC8oA_1ZY-YtHhY47KSX5g&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="" loading="lazy"><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=Ab43m-vicw-0G8S5i49IBkbqJj19Rsl9Vu9BMQVuMeHwyzXxGApMtWjHF5MsqwIDCIKRO2-zHi7QD_ypkdmnzRppvVGEACL-oL4L5BYTvWJjpLyXFY9G0HGOEdErAZKvhyVStzGtPNtjzGMuXaT0rvMzJXak0lWDOeZPdaI27__AObT54oMA5ouAujzRtIrNr8SX6U-VRP6zK3VyZkwxHDaAIibWAxMr0jnchfnfhmdiBMa66x5kHRzbhU47kQKzphqATzSXkHM2BiMadB25AyuzTXEmeu3GFQpBXR5HtvKBfaqGxOWOFM6msS1otPNTdpzRN0KCIxM7aWLH-ScOLeXXzJ0Kj1lktdAr6poVTx61okM_R3QGV7UP0_4Mj6j54pvtAuzsvWjEoUD6qtTx6aDCQBpbQGhWYhAExD4l6uHykoxBGgUn&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="" loading="lazy"><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=Ab43m-vSmL4QNMX5i5hEAxeFEGKNSeuPXElc2fG5hNJRp51jalh9ogBHniP_GwkCcPSWHoXIFq9_K3D4GzN6kPY4UulsKGI_JjAnrgN-6ux6N3LO9wA_Nu_Z72NY_UWXragPwp8HSt9hO_jLsvoY6Do_Bd3hRObVXmC0xuEdtZBb7Tm4qG_7T-V_iyX6PFEXg_m0fsp-Rvap3aCTxi7F7ZA8NI_mVQk3An5n-i1N1IEMkxN0uNoqT5I0xuf_j1sa19SoH_YNOHNqAdUQfEPFhwGe1eDff2kPXp1pHIg7dlvrlWdxxZUB_7K3urEYUnRX1QlbjrTTH-9KLhDipPjS6_P3O6zQSVztmvPb0v7Ms4MTELKS2zdCBB4fyV0-X9NCLozAfnIGtFp3mW3tqEkNru5JBrVYd9KApk-6N22ynNHzaPZlOCxr&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="" loading="lazy"></div>
-
-<!-- RECENSIONI GOOGLE STYLE -->
+<div class="gallery"><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=Ab43m-vzjefsySJqv7l45TXx1up-8j5W2blrrCB36bBj1MC6hztlf-_mBygwAFP6PHwUUu8Yuh_ljVYbLCYC7tL2KU3nF_ZWjPCX-r4Kl5tAAPzvZiZdO_djfK-fV47P2jVfkiahUt4gwSxq8H4BF3vmlzJHnyjaelQDxoHHLTL8QFJMTakvt6_qkijkR-CSsMOcajb1z4lEQG2J6Pj9k_gBQmeYvBfjyGjQbbD52tKf7azOEHw3EiwJc8tOa3Vw89Hl061xPQCAspHS407VsxjuOUd1T1ZtVlrcKFfKc9GoetUxDq91jqsVFw4qCw4sV5PoQLUbBV1eejWTrUtEnvRkAvJ19cvgEnTcgDDA_AXiWDSFC1k2GK16ISXwH6kB_vLogZ9OSAibmvFI1ufYh1FaEDM7J332xcXgnRj3dniCeuqTcA&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="" loading="lazy"><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=Ab43m-tUhTpEuoE9sb0mYkdV5m07VcpYp7YnCNrT579wiUevW6A8rSajayIThKltIEzjXZNVNngUAX89mLX3BJacS6rDfIQk4lXPCJhm-Mh-FNKYXPfU-fJ6dFgSk4fX8IhcdLktPlCxt9PrtU8Y-8mhV7tXPLgzLePIobKZU1qV67sMWCTrfH_0IOJUHvLCC8uAkL8SltREqycmklQPpWj8WHsgIdzRMh63uEgqo2njx6u43wPTiRHVsJFqVO3D9k3eZeKXjhlEaMQL2hObxacVTPUTZ-oZz3z8QIIJEKhlIkgt7KvJuTCyoA2uLh0bI9pnBF-ICxMalq33iN1kgB7H8t08LSDzVdbOe46zPlbvgbMODvEX4smBYXqCpJILQ0NPC5vznLm7fueraJKuoDXSEvyZoGwBUaMaRdI5sHilOlY26maMfrCpG8phBaFXbA&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="" loading="lazy"><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=Ab43m-uNfAXitDnuXNwceiv6-BnOIKpGpWpJeq3krI7nyyYNCiP3EBqEdG3U74fD21irDXfUfPncKl7vrTh_A6qS1WJeZgyl1ihnLorRFXrEv7e4x_IAOEpR2M-Zkda7qYSN0l0DpFPZ7DIYSunz4ZS-dCZmqHTtXvM2CBYg5nvv-fMfmc_egUKxfm2OObCu3VBHOzFbP-EEOd2tdcFmpwacVY2gOfF-f_ih64AVFqpVShlJ4eQLO5Ns0srIwTjjU_aN565qIn3HOu4XMi1ttTGrLWOgR10F_v_pEaourHUH_rU7K7zGOs_QT3lGO-egvvaqk0YuFjSypoK4p03jWLIEQI3EDu03otWGoaaqjoSqOOsLjA54-WWaSQ-h_Y6ZOc_8E6qZ0TZd_gjbw331R2oBJROW7K5dNXA1e41LPI5vkd4h084D3tFZkCHVtIYrQQ&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="" loading="lazy"><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=Ab43m-vkZKRtDr8drfDKcneD_zW4vAhMe-xezHIrKtZND1i1GhGUv9pqJiQ2uPlsBLdWXcbjbi4Tvhxm7AAXlVh5TUspgskLGFzi32-OCxn32jIR1iCQ6aC-4R144yibsf_erZ2GL2APLlXK9NWdIlgfpX-8vNZ0aZIXdb2tR_fkXe3xzHchwrGsglP3A5YnwsT5J18blQdfVshC5Nz70nysJoie77Er1lg4SKWjOW4xd_XLCJ7zryoJz8Xsvs1U0R3iC6lYHqKLP3SWQfUjgSmv3vI7I-Z_Q8x4YCOdKXGXRv35_Ih5BR_N7L54GXtBGuOu0-2vhPJi_DUg-GB0uBI48j_YSK0-PzxRSiRvL5YREWtISkUkLuQ1cHCSbFeAiPIM3DdPf2JfRFM-tmZckjj5_RDqAp6byIKfr8wotifmBLTIgkJy&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="" loading="lazy"><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=Ab43m-vpaHWGZ99xH2ys8C6dCcdOTIK40Xrud0Yr0IVDqhJ6N-zoeiOWEDvv10B-vxlsRWO7T3spvm51-nPk4nyvei2yeZsSxCbBJyNFUTwQ-PXW6pYQhVzoYFC0RhVTmaCs9wsws1nnSBfW_MICFoVNW92YjWylqPwg_ZDntWa0l-O0yb74FINDESgwnVHGQ12g4AdgGm-1MOFVgjKk1JwgmY4EYC_hgnn9vamjSJdeo_E3HSg5zzHidRIwOVX-XWTtgvB3S_14cNpOS7beJISe6kMUE3XK3XGMAkAadZgMQjRJJBhOTHOa6qtyx1cYduraD3LhlW27yaxzVZptfUcyaGW63wDWKaEh6hdcAL0gdAvhIoa7rTw0RhkFEgUCIm4lch2b_PzemJkUMjFtatlnjY9srOAwz_lEPzyht_1fo77Y4KPE&key=AIzaSyCYXbAb5oATfgJRzDY7v7_wNhQ6F7PltAM" alt="" loading="lazy"></div>
 <section class="recensioni">
   <div class="rec-inner">
     <div class="rec-top">
@@ -157,44 +157,33 @@ footer a{color:#888;cursor:pointer}
         <div class="big-stars">★★★★☆</div>
         <div class="rec-count">497 recensioni Google</div>
       </div>
-      <div class="rec-score rec-divider"></div>
+      <div class="rec-divider"></div>
       <div class="rec-title"><h2>Cosa dicono<br>i nostri clienti</h2></div>
     </div>
-    <div class="rec-carousel">
-      <div class="rec-track" id="rec-track">
-        <div class="rev-card">
-  <div class="rev-header">
-    <img src="https://lh3.googleusercontent.com/a-/ALV-UjXl5kS2zRhy7a_L2xZe7oRaltsvKCxP1wn96ttF48ZmmGDHaIBU=s128-c0x00000000-cc-rp-mo" alt="SR" style="width:44px;height:44px;border-radius:50%;object-fit:cover">
-    <div class="rev-meta"><div class="rev-name">Stella Rossi</div><div class="rev-when">6 mesi fa</div></div>
-  </div>
+    <div class="rec-track" id="rec-track"><div class="rev-card">
+  <div class="rev-header"><img src="https://lh3.googleusercontent.com/a-/ALV-UjXl5kS2zRhy7a_L2xZe7oRaltsvKCxP1wn96ttF48ZmmGDHaIBU=s128-c0x00000000-cc-rp-mo" alt="SR" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0"><div class="rev-meta"><div class="rev-name">Stella Rossi</div><div class="rev-when">6 mesi fa</div></div></div>
   <div class="rev-stars">★☆☆☆☆</div>
   <p class="rev-text">"Per quanto mi dispiaccia fare una brutta recensione, non posso negare che la mia esperienza è stata assolutamente negativa e i risultati sono un danno che richiederà mesi per ripararlo.
 
 Ho contattato la struttura in anticipo specificando di avere i capelli ricci e chiedendo un taglio per aumentare "</p>
   <div class="rev-g"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg></div>
-</div><div class="rev-card">
-  <div class="rev-header">
-    <img src="https://lh3.googleusercontent.com/a-/ALV-UjULghZ5fqyPuMScIbs9S1IqnxI5l3_LlOX1fPsiJTuOe_gmK78U=s128-c0x00000000-cc-rp-mo" alt="SG" style="width:44px;height:44px;border-radius:50%;object-fit:cover">
-    <div class="rev-meta"><div class="rev-name">Sofia Giorgi Visani</div><div class="rev-when">10 mesi fa</div></div>
-  </div>
+</div>
+<div class="rev-card">
+  <div class="rev-header"><img src="https://lh3.googleusercontent.com/a-/ALV-UjULghZ5fqyPuMScIbs9S1IqnxI5l3_LlOX1fPsiJTuOe_gmK78U=s128-c0x00000000-cc-rp-mo" alt="SG" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0"><div class="rev-meta"><div class="rev-name">Sofia Giorgi Visani</div><div class="rev-when">10 mesi fa</div></div></div>
   <div class="rev-stars">★★★★☆</div>
   <p class="rev-text">"Unghie wow 😍
 Sono ormai 6 mesi che vado da loro per rifare le unghie e non mi si sono mai spezzate nonostante il mio lavoro ! Prezzi onesti e sempre disponibili per prenotazioni all’ultimo minuto !
 La ragazza che mi ha seguito questa volta, Sara, è molto attenta ai dettagli, la struttura è quasi per"</p>
   <div class="rev-g"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg></div>
-</div><div class="rev-card">
-  <div class="rev-header">
-    <img src="https://lh3.googleusercontent.com/a-/ALV-UjXKzcADP3Wm6cApqJAwtHsEYHTAWD-tMH36BhKxJE9c62ZCLuns=s128-c0x00000000-cc-rp-mo" alt="MB" style="width:44px;height:44px;border-radius:50%;object-fit:cover">
-    <div class="rev-meta"><div class="rev-name">Mauro Bacci</div><div class="rev-when">10 mesi fa</div></div>
-  </div>
+</div>
+<div class="rev-card">
+  <div class="rev-header"><img src="https://lh3.googleusercontent.com/a-/ALV-UjXKzcADP3Wm6cApqJAwtHsEYHTAWD-tMH36BhKxJE9c62ZCLuns=s128-c0x00000000-cc-rp-mo" alt="MB" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0"><div class="rev-meta"><div class="rev-name">Mauro Bacci</div><div class="rev-when">10 mesi fa</div></div></div>
   <div class="rev-stars">★★★★★</div>
   <p class="rev-text">"Esperienza fantastica! Sono andato per fare i raggi di sole bianchi e il risultato è stato semplicemente perfetto: luminosi, naturali e ben distribuiti. Il personale è stato gentilissimo e molto professionale, si vede che ci tengono davvero alla soddisfazione del cliente. E come ciliegina sulla tort"</p>
   <div class="rev-g"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg></div>
-</div><div class="rev-card">
-  <div class="rev-header">
-    <img src="https://lh3.googleusercontent.com/a/ACg8ocI8jj-AceJoOrdu0_SdeyjcDkujS5bpcDvSyacL2col1Hpkmw=s128-c0x00000000-cc-rp-mo-ba3" alt="MM" style="width:44px;height:44px;border-radius:50%;object-fit:cover">
-    <div class="rev-meta"><div class="rev-name">Michael Mucci</div><div class="rev-when">3 mesi fa</div></div>
-  </div>
+</div>
+<div class="rev-card">
+  <div class="rev-header"><img src="https://lh3.googleusercontent.com/a/ACg8ocI8jj-AceJoOrdu0_SdeyjcDkujS5bpcDvSyacL2col1Hpkmw=s128-c0x00000000-cc-rp-mo-ba3" alt="MM" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0"><div class="rev-meta"><div class="rev-name">Michael Mucci</div><div class="rev-when">3 mesi fa</div></div></div>
   <div class="rev-stars">★★★☆☆</div>
   <p class="rev-text">"Pro: sono ben organizzati, doppio lavaggio di capelli, non c’è molto da aspettare.
 
@@ -202,31 +191,27 @@ Contro: Locale non sempre pulitissimo, taglio uomo semplice, non esco mai convin
 
 Prezzo nella media"</p>
   <div class="rev-g"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg></div>
-</div><div class="rev-card">
-  <div class="rev-header">
-    <img src="https://lh3.googleusercontent.com/a/ACg8ocJG1vGRz9JTOM1koiuZO4y2o34csF8QF01hJh-9gi5Nq9a2WA=s128-c0x00000000-cc-rp-mo-ba3" alt="PS" style="width:44px;height:44px;border-radius:50%;object-fit:cover">
-    <div class="rev-meta"><div class="rev-name">Peggy Sue</div><div class="rev-when">6 mesi fa</div></div>
-  </div>
+</div>
+<div class="rev-card">
+  <div class="rev-header"><img src="https://lh3.googleusercontent.com/a/ACg8ocJG1vGRz9JTOM1koiuZO4y2o34csF8QF01hJh-9gi5Nq9a2WA=s128-c0x00000000-cc-rp-mo-ba3" alt="PS" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0"><div class="rev-meta"><div class="rev-name">Peggy Sue</div><div class="rev-when">6 mesi fa</div></div></div>
   <div class="rev-stars">★☆☆☆☆</div>
   <p class="rev-text">"Tentai di entrare nel salone qualche anno fa, ma ebbi subito un'accoglienza sgarbata. Personale nullafacente seduto a battibeccare tra loro, operatrice alla reception intenta a fumare e a farsi i fatti suoi, persona che ha risposto alla mia richiests sul costo di una messa in piega.. spara €. 26,00 "</p>
   <div class="rev-g"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg></div>
 </div>
-      </div>
-      <div class="rec-nav">
-        <button onclick="slide(-1)" aria-label="Precedente">←</button>
-        <button onclick="slide(1)" aria-label="Successivo">→</button>
-      </div>
+</div>
+    <div class="rec-nav">
+      <button onclick="slide(-1)">←</button>
+      <button onclick="slide(1)">→</button>
     </div>
   </div>
 </section>
 <script>
-var allCards=document.querySelectorAll('.rev-card'),idx=0,perPage=window.innerWidth<700?1:2;
-function show(){allCards.forEach(function(c,i){c.style.display=(i>=idx&&i<idx+perPage)?'block':'none'})}
-function slide(d){idx=Math.max(0,Math.min(idx+d,allCards.length-perPage));show()}
+var cards=document.querySelectorAll('.rev-card'),idx=0,pp=window.innerWidth<700?1:2;
+function show(){cards.forEach(function(c,i){c.style.display=(i>=idx&&i<idx+pp)?'block':'none'})}
+function slide(d){idx=Math.max(0,Math.min(idx+d,cards.length-pp));show()}
 show();
-window.addEventListener('resize',function(){perPage=window.innerWidth<700?1:2;show()});
+window.addEventListener('resize',function(){pp=window.innerWidth<700?1:2;show()});
 </script>
-
 <section class="orari">
   <h2 class="sec-t">Orari di Apertura</h2>
   <table>
@@ -242,36 +227,38 @@ window.addEventListener('resize',function(){perPage=window.innerWidth<700?1:2;sh
 <section class="faq">
   <div class="faq-in">
     <h2 class="sec-t">Domande Frequenti</h2>
-    <details><summary>Devo prenotare in anticipo?</summary><p>Consigliamo sempre di prenotare per garantire la disponibilità. Accettiamo anche clienti senza appuntamento quando possibile.</p></details>
-    <details><summary>Quanto dura un trattamento colore?</summary><p>Un colore completo richiede in media 2-3 ore. Per meches o balayage, prevedere 3-4 ore.</p></details>
-    <details><summary>Usate prodotti senza ammoniaca?</summary><p>Sì, offriamo colorazioni tradizionali e alternative senza ammoniaca per capelli sensibili.</p></details>
-    <details><summary>Fate acconciature per matrimoni?</summary><p>Assolutamente sì! Servizio completo per sposa con prova acconciatura inclusa.</p></details>
-    <details><summary>Quali metodi di pagamento accettate?</summary><p>Contanti, carte di credito/debito e pagamenti digitali (Apple Pay, Google Pay).</p></details>
+    <details><summary>Devo prenotare in anticipo?</summary><p>Consigliamo sempre di prenotare. Accettiamo anche senza appuntamento quando possibile.</p></details>
+    <details><summary>Quanto dura un trattamento colore?</summary><p>Un colore completo richiede 2-3 ore. Per meches o balayage, 3-4 ore.</p></details>
+    <details><summary>Usate prodotti senza ammoniaca?</summary><p>Sì, offriamo colorazioni tradizionali e alternative senza ammoniaca.</p></details>
+    <details><summary>Fate acconciature per matrimoni?</summary><p>Sì! Servizio completo per sposa con prova inclusa.</p></details>
+    <details><summary>Quali metodi di pagamento accettate?</summary><p>Contanti, carte e pagamenti digitali (Apple Pay, Google Pay).</p></details>
   </div>
 </section>
 <div id="map"></div>
 <script>
 var map=L.map('map').setView([44.5145559,11.3527478],15);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
-L.marker([44.5145559,11.3527478]).addTo(map).bindPopup('<b>Vivi Salon</b><br>Via Pietro Faccini,  1').openPopup();
+L.marker([44.5145559,11.3527478]).addTo(map).bindPopup('<b>Vivi Salon</b><br>Via Pietro Faccini, 1').openPopup();
 </script>
 <section class="contatti">
   <h2>Contattaci</h2>
-  <p style="margin-top:14px">Via Pietro Faccini,  1, 40128 Bologna</p>
-  <p><a href="tel:+39 051 631 3291">+39 051 631 3291</a></p>
-  <p style="margin-top:18px"><a href="https://wa.me/390516313291" target="_blank" style="background:var(--purple);color:#fff;padding:11px 26px;border-radius:2px;text-decoration:none;display:inline-block">Scrivici su WhatsApp</a></p>
+  <p style="margin-top:14px">Via Pietro Faccini, 1, 40128 Bologna</p>
+  <p><a href="tel:+39 051 631 3291" style="color:var(--purple)">+39 051 631 3291</a></p>
 </section>
 <footer>
-  <p>© 2025 Vivi Salon · Via Pietro Faccini,  1, 40128 Bologna · <a onclick="document.getElementById('pm').classList.add('open')">Privacy Policy</a></p>
+  <p>© 2025 Vivi Salon · Via Pietro Faccini, 1, 40128 Bologna · <a onclick="document.getElementById('pm').classList.add('open')">Privacy Policy</a></p>
 </footer>
 <div id="pm" class="modal" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="modal-box">
     <button class="modal-close" onclick="document.getElementById('pm').classList.remove('open')">Chiudi</button>
     <h3>Privacy Policy</h3>
     <p>Questo sito non raccoglie dati personali, non usa cookie di profilazione e non effettua tracking.</p>
-    <p>Titolare: Vivi Salon, Via Pietro Faccini,  1, 40128 Bologna. Contatto: <a href="tel:+39 051 631 3291">+39 051 631 3291</a>.</p>
+    <p>Titolare: Vivi Salon, Via Pietro Faccini, 1, 40128 Bologna. Contatto: +39 051 631 3291</p>
     <p>Ultimo aggiornamento: maggio 2025.</p>
   </div>
 </div>
-<a href="https://wa.me/390516313291" class="wa" target="_blank">&#x1F4AC;</a>
+<a href="tel:+39 051 631 3291" class="sticky-btn sticky-call" title="Chiama ora">
+  <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+  <span>Chiama</span>
+</a>
 </body></html>
